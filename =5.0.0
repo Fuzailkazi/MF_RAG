@@ -1,0 +1,25 @@
+Collecting pinecone
+  Downloading pinecone-8.1.2-py3-none-any.whl.metadata (14 kB)
+Requirement already satisfied: certifi>=2019.11.17 in ./venv/lib/python3.14/site-packages (from pinecone) (2026.2.25)
+Requirement already satisfied: orjson>=3.11.6 in ./venv/lib/python3.14/site-packages (from pinecone) (3.11.8)
+Collecting pinecone-plugin-assistant<4.0.0,>=3.0.1 (from pinecone)
+  Downloading pinecone_plugin_assistant-3.0.3-py3-none-any.whl.metadata (30 kB)
+Collecting pinecone-plugin-interface<0.1.0,>=0.0.7 (from pinecone)
+  Downloading pinecone_plugin_interface-0.0.7-py3-none-any.whl.metadata (1.2 kB)
+Requirement already satisfied: python-dateutil>=2.5.3 in ./venv/lib/python3.14/site-packages (from pinecone) (2.9.0.post0)
+Requirement already satisfied: typing-extensions>=3.7.4 in ./venv/lib/python3.14/site-packages (from pinecone) (4.15.0)
+Requirement already satisfied: urllib3>=1.26.5 in ./venv/lib/python3.14/site-packages (from pinecone) (2.6.3)
+Requirement already satisfied: requests<3.0.0,>=2.32.3 in ./venv/lib/python3.14/site-packages (from pinecone-plugin-assistant<4.0.0,>=3.0.1->pinecone) (2.33.1)
+Requirement already satisfied: charset_normalizer<4,>=2 in ./venv/lib/python3.14/site-packages (from requests<3.0.0,>=2.32.3->pinecone-plugin-assistant<4.0.0,>=3.0.1->pinecone) (3.4.7)
+Requirement already satisfied: idna<4,>=2.5 in ./venv/lib/python3.14/site-packages (from requests<3.0.0,>=2.32.3->pinecone-plugin-assistant<4.0.0,>=3.0.1->pinecone) (3.11)
+Requirement already satisfied: six>=1.5 in ./venv/lib/python3.14/site-packages (from python-dateutil>=2.5.3->pinecone) (1.17.0)
+Downloading pinecone-8.1.2-py3-none-any.whl (742 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 742.8/742.8 kB 1.8 MB/s  0:00:00
+Downloading pinecone_plugin_assistant-3.0.3-py3-none-any.whl (280 kB)
+Downloading pinecone_plugin_interface-0.0.7-py3-none-any.whl (6.2 kB)
+Installing collected packages: pinecone-plugin-interface, pinecone-plugin-assistant, pinecone
+
+Successfully installed pinecone-8.1.2 pinecone-plugin-assistant-3.0.3 pinecone-plugin-interface-0.0.7
+
+[notice] A new release of pip is available: 25.2 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip

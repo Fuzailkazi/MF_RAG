@@ -1,12 +1,10 @@
 """
-Generator — produces grounded answers using Gemini with strict citation rules.
+Generator — produces grounded answers using GPT-4o with strict citation rules.
 Supports conversation history for multi-turn context.
 """
 
-from google import genai
-from src.config import GEMINI_API_KEY, GENERATOR_MODEL
-
-client = genai.Client(api_key=GEMINI_API_KEY)
+from openai import OpenAI
+from src.config import OPENAI_API_KEY, GENERATOR_MODEL
 
 SYSTEM_PROMPT = """You are a facts-only mutual fund FAQ assistant for Groww.
 
@@ -27,7 +25,6 @@ Respond in this exact format:
 
 
 def format_context(chunks: list[dict]) -> str:
-    """Format retrieved chunks into context for the LLM."""
     context_parts = []
     for i, chunk in enumerate(chunks, 1):
         meta = chunk["metadata"]
@@ -42,38 +39,24 @@ def format_context(chunks: list[dict]) -> str:
     return "\n".join(context_parts)
 
 
-def generate_answer(
-    query: str,
-    chunks: list[dict],
-    conversation_history: list[dict] | None = None,
-) -> str:
-    """
-    Generate a grounded answer from retrieved chunks.
-    Optionally includes conversation history for multi-turn context.
-    """
+def generate_answer(query: str, chunks: list[dict], conversation_history: list[dict] | None = None) -> str:
     if not chunks:
         return "I don't have this information in my current sources."
 
     context = format_context(chunks)
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
-    # Build conversation as a single prompt with history
-    prompt_parts = []
     if conversation_history:
         for turn in conversation_history[-4:]:
-            role = "User" if turn["role"] == "user" else "Assistant"
-            prompt_parts.append(f"{role}: {turn['content']}")
+            messages.append({"role": turn["role"], "content": turn["content"]})
 
-    prompt_parts.append(f"CONTEXT CHUNKS:\n{context}\n\nUSER QUESTION: {query}")
-    full_prompt = "\n\n".join(prompt_parts)
+    messages.append({"role": "user", "content": f"CONTEXT CHUNKS:\n{context}\n\nUSER QUESTION: {query}"})
 
-    response = client.models.generate_content(
+    client = OpenAI(api_key=OPENAI_API_KEY)
+    response = client.chat.completions.create(
         model=GENERATOR_MODEL,
-        contents=full_prompt,
-        config=genai.types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
-            temperature=0,
-            max_output_tokens=300,
-        ),
+        messages=messages,
+        temperature=0,
+        max_tokens=300,
     )
-
-    return response.text.strip()
+    return response.choices[0].message.content.strip()

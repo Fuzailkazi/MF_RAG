@@ -1,12 +1,9 @@
 """
-Query Classifier — uses Gemini Flash to classify user queries.
-Categories: factual, advisory, comparative, predictive, out_of_scope
+Query Classifier — uses GPT-4o-mini to classify user queries.
 """
 
-from google import genai
-from src.config import GEMINI_API_KEY, CLASSIFIER_MODEL
-
-client = genai.Client(api_key=GEMINI_API_KEY)
+from openai import OpenAI
+from src.config import OPENAI_API_KEY, CLASSIFIER_MODEL
 
 CLASSIFICATION_PROMPT = """You are a query classifier for a mutual fund FAQ assistant.
 
@@ -22,23 +19,16 @@ Respond with ONLY the category name, nothing else."""
 
 
 def classify_query(query: str) -> str:
-    """
-    Classify a user query into one of the supported categories.
-    """
-    response = client.models.generate_content(
+    client = OpenAI(api_key=OPENAI_API_KEY)
+    response = client.chat.completions.create(
         model=CLASSIFIER_MODEL,
-        contents=query,
-        config=genai.types.GenerateContentConfig(
-            system_instruction=CLASSIFICATION_PROMPT,
-            temperature=0,
-            max_output_tokens=20,
-        ),
+        messages=[
+            {"role": "system", "content": CLASSIFICATION_PROMPT},
+            {"role": "user", "content": query},
+        ],
+        temperature=0,
+        max_tokens=20,
     )
-
-    category = response.text.strip().lower()
-
-    valid_categories = {"factual", "advisory", "comparative", "predictive", "out_of_scope"}
-    if category not in valid_categories:
-        return "out_of_scope"
-
-    return category
+    category = response.choices[0].message.content.strip().lower()
+    valid = {"factual", "advisory", "comparative", "predictive", "out_of_scope"}
+    return category if category in valid else "out_of_scope"

@@ -13,8 +13,8 @@ CHUNK_OVERLAP = 50
 TOP_K = 5
 
 EMBEDDING_MODEL = "text-embedding-3-small"
-CLASSIFIER_MODEL = "gemini-2.0-flash"
-GENERATOR_MODEL = "gemini-2.0-flash"
+CLASSIFIER_MODEL = "gpt-4o-mini"
+GENERATOR_MODEL = "gpt-4o"
 
 SCHEME_REGISTRY = {
     "Mirae Asset Large Cap Fund": {
